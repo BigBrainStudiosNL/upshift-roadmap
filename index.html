@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upshift — Ontwikkelroadmap 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-violet: #29246A;
+            --coral: #E10E5B;
+            --teal: #77EEE5;
+            --violet-light: #CEC0F9;
+            --coral-subtle: #FCE6EE;
+            --teal-medium: #E3FBF9;
+            --dark-card: rgba(30, 26, 78, 0.65);
+            --dark-card-solid: rgba(30, 26, 78, 0.85);
+            --card-border: rgba(68, 62, 136, 0.5);
+            --card-border-hover: rgba(119, 238, 229, 0.35);
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(206, 192, 249, 0.85);
+            --text-muted: rgba(187, 187, 204, 0.75);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: var(--coral) var(--deep-violet);
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: #0d0a2a;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* AURORA BACKGROUND                       */
+        /* ═══════════════════════════════════════ */
+
+        .aurora-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .aurora-bg::before {
+            content: '';
+            position: absolute;
+            inset: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(ellipse 600px 400px at 20% 30%, rgba(225, 14, 91, 0.18) 0%, transparent 70%),
+                radial-gradient(ellipse 500px 500px at 75% 20%, rgba(119, 238, 229, 0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 700px 350px at 50% 70%, rgba(108, 62, 142, 0.15) 0%, transparent 70%),
+                radial-gradient(ellipse 400px 600px at 85% 80%, rgba(225, 14, 91, 0.1) 0%, transparent 70%),
+                radial-gradient(ellipse 500px 400px at 10% 85%, rgba(119, 238, 229, 0.08) 0%, transparent 70%);
+            animation: auroraShift 25s ease-in-out infinite alternate;
+        }
+
+        @keyframes auroraShift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(-3%, 2%) rotate(1deg); }
+            66% { transform: translate(2%, -1%) rotate(-0.5deg); }
+            100% { transform: translate(-1%, 3%) rotate(0.5deg); }
+        }
+
+        .aurora-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 800px 500px at 60% 40%, rgba(41, 36, 106, 0.4) 0%, transparent 70%);
+        }
+
+        /* Noise overlay */
+        .noise {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* LAYOUT                                  */
+        /* ═══════════════════════════════════════ */
+
+        .content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            padding: 5rem 0;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* PARTNER STRIP (sticky)                  */
+        /* ═══════════════════════════════════════ */
+
+        .partner-strip {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(13, 10, 42, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--card-border);
+            padding: 0.5rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .partner-strip span {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .partner-strip img {
+            height: 22px;
+            opacity: 0.7;
+            filter: brightness(1.3);
+        }
+
+        .partner-strip .divider {
+            width: 1px;
+            height: 16px;
+            background: var(--card-border);
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* NAV                                     */
+        /* ═══════════════════════════════════════ */
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(13, 10, 42, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(68, 62, 136, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(13, 10, 42, 0.92);
+            border-bottom-color: var(--card-border);
+        }
+
+        .nav-logo {
+            height: 28px;
+            opacity: 0.95;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--teal); }
+
+        /* ═══════════════════════════════════════ */
+        /* HERO                                    */
+        /* ═══════════════════════════════════════ */
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 5rem;
+            padding-bottom: 6rem;
+            position: relative;
+        }
+
+        .hero-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .hero-glow.coral { background: var(--coral); left: -200px; top: 20%; }
+        .hero-glow.teal { background: var(--teal); right: -200px; top: 40%; }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(225, 14, 91, 0.12);
+            border: 1px solid rgba(225, 14, 91, 0.25);
+            border-radius: 100px;
+            padding: 0.4rem 1rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--coral);
+            margin-bottom: 2rem;
+            width: fit-content;
+            letter-spacing: 0.03em;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--coral);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.8rem, 6vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.08;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, var(--teal), var(--violet-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .hero-bar {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--coral), var(--teal));
+            border-radius: 4px;
+            margin-top: 2.5rem;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* SECTION HEADERS                         */
+        /* ═══════════════════════════════════════ */
+
+        .section-header {
+            margin-bottom: 3rem;
+        }
+
+        .section-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--teal);
+            margin-bottom: 0.75rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 650px;
+            line-height: 1.6;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* GLASS CARDS                             */
+        /* ═══════════════════════════════════════ */
+
+        .glass {
+            background: var(--dark-card);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 16px 16px 0 0;
+            opacity: 0;
+            transition: opacity 0.35s;
+        }
+
+        .glass:hover {
+            border-color: var(--card-border-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(119, 238, 229, 0.06);
+        }
+
+        .glass:hover::before { opacity: 1; }
+
+        .glass.accent-coral::before { background: linear-gradient(90deg, var(--coral), transparent); }
+        .glass.accent-teal::before { background: linear-gradient(90deg, var(--teal), transparent); }
+        .glass.accent-violet::before { background: linear-gradient(90deg, var(--violet-light), transparent); }
+        .glass.accent-blue::before { background: linear-gradient(90deg, #60A5FA, transparent); }
+        .glass.accent-yellow::before { background: linear-gradient(90deg, #FBBF24, transparent); }
+
+        /* Static accent line (always visible) */
+        .glass .accent-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 40%;
+            height: 3px;
+            border-radius: 16px 0 0 0;
+        }
+
+        .accent-line.coral { background: var(--coral); }
+        .accent-line.teal { background: var(--teal); }
+        .accent-line.violet { background: var(--violet-light); }
+        .accent-line.blue { background: #60A5FA; }
+        .accent-line.yellow { background: #FBBF24; }
+        .accent-line.green { background: #34D399; }
+
+        /* ═══════════════════════════════════════ */
+        /* OVER UPSHIFT                            */
+        /* ═══════════════════════════════════════ */
+
+        .about-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .about-intro {
+            padding: 2.5rem;
+        }
+
+        .about-intro .highlight {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--teal);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .about-intro p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 0.75rem;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .team-card {
+            padding: 1.8rem;
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .team-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 14px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 2px solid var(--card-border);
+        }
+
+        .team-info h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+
+        .team-info .role {
+            font-size: 0.8rem;
+            color: var(--teal);
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+        }
+
+        .team-info .desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* CAPABILITIES                            */
+        /* ═══════════════════════════════════════ */
+
+        .outcomes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .outcome-card {
+            padding: 2rem 2.2rem;
+        }
+
+        .outcome-card .icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .outcome-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            line-height: 1.3;
+        }
+
+        .outcome-card p {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        .capabilities-label {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 1.2rem;
+            font-weight: 500;
+        }
+
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.2rem;
+        }
+
+        .cap-card {
+            padding: 1.6rem 1.4rem;
+        }
+
+        .cap-card .icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .cap-card h4 {
+            font-size: 0.92rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .cap-card p {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            line-height: 1.55;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* ROADMAP COLUMNS                         */
+        /* ═══════════════════════════════════════ */
+
+        .roadmap-columns {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .roadmap-col .col-header {
+            padding: 1rem 1.4rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: var(--dark-card-solid);
+        }
+
+        .roadmap-col .col-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .col-header.blue h3 { color: #60A5FA; }
+        .col-header.violet h3 { color: var(--violet-light); }
+        .col-header.yellow h3 { color: #FBBF24; }
+
+        .roadmap-item {
+            padding: 1.4rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .roadmap-item h4 {
+            font-size: 0.92rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            line-height: 1.3;
+        }
+
+        .col-header.blue + .roadmap-item h4,
+        .roadmap-col:first-child .roadmap-item h4 { color: #60A5FA; }
+        .roadmap-col:nth-child(2) .roadmap-item h4 { color: var(--violet-light); }
+        .roadmap-col:nth-child(3) .roadmap-item h4 { color: #FBBF24; }
+
+        .roadmap-item ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .roadmap-item li {
+            font-size: 0.84rem;
+            color: var(--text-secondary);
+            padding: 0.25rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .roadmap-item li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.55rem;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--card-border-hover);
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* FEATURES GRID                           */
+        /* ═══════════════════════════════════════ */
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+        }
+
+        .feature-card .icon {
+            font-size: 1.6rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            line-height: 1.3;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* INTEGRATIONS                            */
+        /* ═══════════════════════════════════════ */
+
+        .integration-section {
+            margin-bottom: 3rem;
+        }
+
+        .integration-section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .integration-section h3 .icon { font-size: 1.2rem; }
+
+        .ecom-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.8rem;
+        }
+
+        .ecom-chip {
+            padding: 1.2rem 0.6rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ecom-chip .chip-logo {
+            height: 28px;
+            width: auto;
+            max-width: 70%;
+            object-fit: contain;
+            opacity: 0.9;
+            margin-bottom: 0.2rem;
+        }
+
+        .ecom-chip .chip-name {
+            font-size: 0.78rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .ecom-chip .chip-status {
+            font-size: 0.68rem;
+            font-weight: 600;
+        }
+
+        .status-active { color: #34D399; }
+        .status-soon { color: #FBBF24; }
+        .status-planned { color: #FBBF24; }
+        .status-possible { color: var(--text-muted); }
+
+        .pim-note {
+            margin-top: 0.8rem;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .datapool-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+        }
+
+        .datapool-card {
+            padding: 1.4rem;
+            text-align: center;
+        }
+
+        .datapool-card .dp-logo {
+            height: 30px;
+            max-width: 50%;
+            object-fit: contain;
+            margin-bottom: 0.6rem;
+            opacity: 0.9;
+        }
+
+        .datapool-card h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .datapool-card .dp-meta {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .standards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.2rem;
+        }
+
+        .standard-chip {
+            padding: 1.2rem;
+            text-align: center;
+        }
+
+        .standard-chip h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .standard-chip .std-status {
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* FOOTER                                  */
+        /* ═══════════════════════════════════════ */
+
+        .page-footer {
+            text-align: center;
+            padding: 3rem 0 5rem;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .page-footer p {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* SCROLL ANIMATIONS                       */
+        /* ═══════════════════════════════════════ */
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.35s; }
+
+        /* ═══════════════════════════════════════ */
+        /* SECTION DIVIDERS                        */
+        /* ═══════════════════════════════════════ */
+
+        .section-glow {
+            position: relative;
+        }
+
+        .section-glow::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 400px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.08;
+            pointer-events: none;
+        }
+
+        .glow-coral::before { background: var(--coral); }
+        .glow-teal::before { background: var(--teal); }
+        .glow-violet::before { background: var(--violet-light); }
+
+        /* ═══════════════════════════════════════ */
+        /* LIGHT SECTIONS                          */
+        /* ═══════════════════════════════════════ */
+
+        .section-light {
+            position: relative;
+            z-index: 0;
+        }
+
+        .section-light::before {
+            content: '';
+            position: absolute;
+            top: -3rem;
+            bottom: -3rem;
+            left: 50%;
+            width: 100vw;
+            transform: translateX(-50%);
+            background:
+                radial-gradient(ellipse 550px 400px at 8% 25%, rgba(206, 192, 249, 0.25) 0%, transparent 70%),
+                radial-gradient(ellipse 450px 350px at 88% 65%, rgba(252, 230, 238, 0.2) 0%, transparent 70%),
+                radial-gradient(ellipse 400px 300px at 45% 85%, rgba(227, 251, 249, 0.18) 0%, transparent 70%),
+                #FFFFFF;
+            z-index: -1;
+        }
+
+        .section-light .section-label { color: var(--coral); }
+        .section-light .section-header h2 { color: var(--deep-violet); }
+        .section-light .section-header p { color: rgba(41, 36, 106, 0.65); }
+
+        .section-light .glass {
+            background: rgba(255, 255, 255, 0.75);
+            border-color: rgba(41, 36, 106, 0.08);
+            box-shadow: 0 2px 20px rgba(41, 36, 106, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .section-light .glass:hover {
+            border-color: rgba(41, 36, 106, 0.16);
+            box-shadow: 0 8px 32px rgba(41, 36, 106, 0.1);
+        }
+
+        .section-light .glass h3,
+        .section-light .glass h4 { color: var(--deep-violet); }
+
+        .section-light .glass p,
+        .section-light .glass .desc,
+        .section-light .outcome-card p,
+        .section-light .cap-card p,
+        .section-light .feature-card p { color: rgba(41, 36, 106, 0.65); }
+
+        .section-light .capabilities-label { color: rgba(41, 36, 106, 0.5); }
+
+        .section-light .glass .highlight {
+            color: var(--coral);
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* RESPONSIVE                              */
+        /* ═══════════════════════════════════════ */
+
+        @media (max-width: 900px) {
+            .outcomes-grid,
+            .team-grid,
+            .capabilities-grid,
+            .features-grid,
+            .ecom-grid { grid-template-columns: 1fr 1fr; }
+
+            .roadmap-columns { grid-template-columns: 1fr; }
+
+            .datapool-grid,
+            .standards-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 600px) {
+            .content { padding: 0 1.2rem; }
+            section { padding: 3rem 0; }
+
+            .outcomes-grid,
+            .team-grid,
+            .capabilities-grid,
+            .ecom-grid,
+            .datapool-grid,
+            .standards-grid { grid-template-columns: 1fr; }
+
+            .features-grid { grid-template-columns: 1fr; }
+
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Aurora background -->
+    <div class="aurora-bg"></div>
+    <div class="noise"></div>
+
+    <!-- Navigation -->
+    <nav id="nav">
+        <img src="pptx-assets/logo-white-hires.png" alt="Upshift" class="nav-logo">
+        <ul class="nav-links">
+            <li><a href="#about">Over ons</a></li>
+            <li><a href="#capabilities">Platform</a></li>
+            <li><a href="#roadmap">Roadmap</a></li>
+            <li><a href="#features">Nieuw</a></li>
+            <li><a href="#integrations">Integraties</a></li>
+        </ul>
+    </nav>
+
+    <div class="content">
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- HERO                                    -->
+        <!-- ═══════════════════════════════════════ -->
+        <section class="hero" id="hero">
+            <div class="hero-glow coral"></div>
+            <div class="hero-glow teal"></div>
+
+            <div class="hero-badge">Ontwikkelroadmap 2026</div>
+
+            <h1>
+                Wij bouwen de<br>
+                compleetste tool voor<br>
+                <span class="gradient-text">automatische dataverrijking</span>
+            </h1>
+
+            <p class="hero-sub">
+                Voor groothandels, B2B en grote retailers.
+                Van leveranciersdata naar webshop-klare producten — volledig geautomatiseerd.
+            </p>
+
+            <div class="hero-bar"></div>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- OVER UPSHIFT                            -->
+        <!-- ═══════════════════════════════════════ -->
+        <section id="about" class="section-glow glow-coral">
+            <div class="section-header reveal">
+                <div class="section-label">Over Upshift</div>
+                <h2>E-commerce minder arbeidsintensief<br>en winstgevender</h2>
+            </div>
+
+            <div class="about-grid">
+                <div class="glass about-intro accent-teal reveal">
+                    <div class="accent-line teal"></div>
+                    <div class="highlight">
+                        Upshift maakt e-commerce minder arbeidsintensief en winstgevender.
+                    </div>
+                    <p>
+                        Henk Bourgonje en Jetse Mooij, voormalig collega's bij een succesvolle scale-up,
+                        lanceerden Upshift eind 2024. Jetse liep tegen efficiëntieproblemen aan bij het beheren
+                        van 250.000+ producten bij een technische groothandel en werkte samen met Henk aan een oplossing.
+                    </p>
+                    <p>
+                        Wij zijn geen PIM — we verwerken productdata. Bedrijven uploaden leveranciersdata en
+                        Upshift converteert dit naar hun e-commerce standaard: classificatie, variantkoppelingen,
+                        tekstgeneratie, SEO-optimalisatie en media-toewijzing.
+                    </p>
+                </div>
+
+                <div class="team-grid">
+                    <div class="glass team-card accent-coral reveal reveal-delay-1">
+                        <div class="accent-line coral"></div>
+                        <img src="pptx-assets/henk.png" alt="Henk Bourgonje" class="team-photo">
+                        <div class="team-info">
+                            <h3>Henk Bourgonje</h3>
+                            <div class="role">Owner & Developer</div>
+                            <div class="desc">Ervaren developer met een AI chat- en e-mail automatiseringsbedrijf naast Upshift.</div>
+                        </div>
+                    </div>
+                    <div class="glass team-card accent-teal reveal reveal-delay-2">
+                        <div class="accent-line teal"></div>
+                        <img src="pptx-assets/jetse.png" alt="Jetse Mooij" class="team-photo">
+                        <div class="team-info">
+                            <h3>Jetse Mooij</h3>
+                            <div class="role">Owner & Consultant</div>
+                            <div class="desc">E-commerce expert met achtergrond in online marketing en e-commerce management.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- WAT WE VANDAAG AL BIEDEN                -->
+        <!-- ═══════════════════════════════════════ -->
+        <section id="capabilities" class="section-light">
+            <div class="section-header reveal">
+                <div class="section-label">Platform</div>
+                <h2>Wat we vandaag al bieden</h2>
+                <p>Complete dataverwerking voor bedrijven met ETIM of een eigen datastandaard.</p>
+            </div>
+
+            <div class="outcomes-grid">
+                <div class="glass outcome-card accent-coral reveal">
+                    <div class="accent-line coral"></div>
+                    <div class="icon">🚀</div>
+                    <h3>Snel nieuw aanbod toevoegen</h3>
+                    <p>Nieuwe leveranciersproducten verwerken en direct live zetten op je webshop.</p>
+                </div>
+                <div class="glass outcome-card accent-teal reveal reveal-delay-1">
+                    <div class="accent-line teal"></div>
+                    <div class="icon">📈</div>
+                    <h3>Bestaand aanbod optimaliseren</h3>
+                    <p>Productdata verrijken, aanvullen en verbeteren voor betere conversie en vindbaarheid.</p>
+                </div>
+            </div>
+
+            <div class="capabilities-label reveal">Dit maken we mogelijk met</div>
+
+            <div class="capabilities-grid">
+                <div class="glass cap-card accent-coral reveal">
+                    <div class="accent-line coral"></div>
+                    <div class="icon">🏷️</div>
+                    <h4>Productclassificatie</h4>
+                    <p>Automatische classificatie naar de juiste productklassen en specificaties.</p>
+                </div>
+                <div class="glass cap-card accent-teal reveal reveal-delay-1">
+                    <div class="accent-line teal"></div>
+                    <div class="icon">🔗</div>
+                    <h4>Slimme Productkoppelingen</h4>
+                    <p>Intelligente koppelingen voor varianten, accessoires en cross-sell.</p>
+                </div>
+                <div class="glass cap-card accent-violet reveal reveal-delay-2">
+                    <div class="accent-line violet"></div>
+                    <div class="icon">✍️</div>
+                    <h4>Tekstgeneratie</h4>
+                    <p>AI-gegenereerde productbeschrijvingen op basis van technische specificaties.</p>
+                </div>
+                <div class="glass cap-card accent-coral reveal reveal-delay-3">
+                    <div class="accent-line coral"></div>
+                    <div class="icon">🔍</div>
+                    <h4>SEO-velden</h4>
+                    <p>Geoptimaliseerde meta-titles, descriptions en URL-slugs.</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- ROADMAP PER KLANTSEGMENT                -->
+        <!-- ═══════════════════════════════════════ -->
+        <section id="roadmap" class="section-glow glow-violet">
+            <div class="section-header reveal">
+                <div class="section-label">Roadmap 2026</div>
+                <h2>Per klantsegment</h2>
+                <p>Nieuwe functionaliteit per datastandaard.</p>
+            </div>
+
+            <div class="roadmap-columns">
+                <!-- ETIM -->
+                <div class="roadmap-col reveal">
+                    <div class="glass col-header blue">
+                        <div class="accent-line blue"></div>
+                        <h3>🏢 ETIM Klanten</h3>
+                    </div>
+                    <div class="glass roadmap-item accent-blue">
+                        <div class="accent-line blue"></div>
+                        <h4>🔗 Datapool Koppelingen</h4>
+                        <ul>
+                            <li>Integratie met 2BA</li>
+                            <li>Integratie met EZbase</li>
+                            <li>Geautomatiseerde data-uitwisseling</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Custom Data Standaard -->
+                <div class="roadmap-col reveal reveal-delay-1">
+                    <div class="glass col-header violet">
+                        <div class="accent-line violet"></div>
+                        <h3>⚙️ Custom Data Standaard</h3>
+                    </div>
+                    <div class="glass roadmap-item accent-violet">
+                        <div class="accent-line violet"></div>
+                        <h4>🤖 AI Klassenopbouw</h4>
+                        <ul>
+                            <li>AI bepaalt productklassen</li>
+                            <li>Automatische specificaties</li>
+                            <li>Volledig geautomatiseerd</li>
+                        </ul>
+                    </div>
+                    <div class="glass roadmap-item accent-violet">
+                        <div class="accent-line violet"></div>
+                        <h4>💡 Slimme Specificaties</h4>
+                        <ul>
+                            <li>Afgeleide specs met meerwaarde</li>
+                            <li>Bijv. 'uitstekende waterdichtheid'</li>
+                            <li>Op basis van onderliggende data</li>
+                        </ul>
+                    </div>
+                    <div class="glass roadmap-item accent-violet">
+                        <div class="accent-line violet"></div>
+                        <h4>🌐 Community Waardebibliotheek</h4>
+                        <ul>
+                            <li>Uitwisseling tussen klanten</li>
+                            <li>Gedeelde productklassen</li>
+                            <li>Community-gedreven</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- GPC Standaard -->
+                <div class="roadmap-col reveal reveal-delay-2">
+                    <div class="glass col-header yellow">
+                        <div class="accent-line yellow"></div>
+                        <h3>🆕 GPC Standaard</h3>
+                    </div>
+                    <div class="glass roadmap-item accent-yellow">
+                        <div class="accent-line yellow"></div>
+                        <h4>📋 GPC Data Standaard</h4>
+                        <ul>
+                            <li>Nieuw klantsegment</li>
+                            <li>GPC classificatie standaard</li>
+                        </ul>
+                    </div>
+                    <div class="glass roadmap-item accent-yellow">
+                        <div class="accent-line yellow"></div>
+                        <h4>🏛️ GS1 Integratie</h4>
+                        <ul>
+                            <li>Upshift als GS1 connector</li>
+                            <li>Koppeling met GS1 datapool</li>
+                            <li>Gestandaardiseerde productdata</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- ALGEMENE NIEUWE FUNCTIES                -->
+        <!-- ═══════════════════════════════════════ -->
+        <section id="features" class="section-light">
+            <div class="section-header reveal">
+                <div class="section-label">Nieuw in 2026</div>
+                <h2>Algemene nieuwe functies</h2>
+                <p>Overkoepelende functionaliteit voor alle klanten en datastandaarden.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="glass feature-card accent-teal reveal">
+                    <div class="accent-line teal"></div>
+                    <div class="icon">🌍</div>
+                    <h3>Meertaligheid & Vertalingen</h3>
+                    <p>Ondersteuning voor meerdere talen en automatische vertalingen. Beschikbaar voor alle datastandaarden en klanten.</p>
+                </div>
+                <div class="glass feature-card accent-coral reveal reveal-delay-1">
+                    <div class="accent-line coral"></div>
+                    <div class="icon">🕷️</div>
+                    <h3>Data Scraper</h3>
+                    <p>Geautomatiseerde data scraping tool voor het verzamelen van productinformatie uit externe bronnen.</p>
+                </div>
+                <div class="glass feature-card accent-violet reveal reveal-delay-2">
+                    <div class="accent-line violet"></div>
+                    <div class="icon">🤝</div>
+                    <h3>Leveranciers Portaal</h3>
+                    <p>Portaal waar leveranciers zelf ontbrekende data kunnen invullen. Inzichtelijk welke data nog mist voor betere samenwerking in de keten.</p>
+                </div>
+
+                <div class="glass feature-card accent-teal reveal">
+                    <div class="accent-line teal"></div>
+                    <div class="icon">📝</div>
+                    <h3>Losse Producten</h3>
+                    <p>Individuele producten handmatig toevoegen en verwerken, buiten de reguliere leveranciersimports om.</p>
+                </div>
+                <div class="glass feature-card accent-coral reveal reveal-delay-1">
+                    <div class="accent-line coral"></div>
+                    <div class="icon">⚡</div>
+                    <h3>Batchwijzigingen</h3>
+                    <p>Wijzigingen in bulk doorvoeren op bestaande productdata — categorieën, specificaties of tekstvelden.</p>
+                </div>
+                <div class="glass feature-card accent-violet reveal reveal-delay-2">
+                    <div class="accent-line violet"></div>
+                    <div class="icon">🔀</div>
+                    <h3>Automatische Klassenkoppelingen</h3>
+                    <p>Automatisch voorgestelde koppelingen tussen productklassen voor snellere en consistentere classificatie.</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- INTEGRATIES & KOPPELINGEN               -->
+        <!-- ═══════════════════════════════════════ -->
+        <section id="integrations" class="section-glow glow-teal">
+            <div class="section-header reveal">
+                <div class="section-label">Ecosysteem</div>
+                <h2>Integraties & Koppelingen</h2>
+                <p>Huidige en geplande koppelingen met platformen, datapools en standaarden.</p>
+            </div>
+
+            <!-- E-Commerce -->
+            <div class="integration-section">
+                <h3 class="reveal"><span class="icon">🛒</span> E-Commerce Platformen</h3>
+                <div class="ecom-grid">
+                    <div class="glass ecom-chip accent-teal reveal">
+                        <div class="accent-line green"></div>
+                        <img src="pptx-assets/logo-woocommerce.png" alt="WooCommerce" class="chip-logo">
+                        <span class="chip-name">WooCommerce</span>
+                        <span class="chip-status status-active">Actief</span>
+                    </div>
+                    <div class="glass ecom-chip accent-teal reveal reveal-delay-1">
+                        <div class="accent-line green"></div>
+                        <img src="pptx-assets/logo-shopify.png" alt="Shopify" class="chip-logo">
+                        <span class="chip-name">Shopify</span>
+                        <span class="chip-status status-active">Actief</span>
+                    </div>
+                    <div class="glass ecom-chip accent-teal reveal reveal-delay-1">
+                        <div class="accent-line green"></div>
+                        <img src="pptx-assets/logo-logic4.png" alt="Logic4" class="chip-logo">
+                        <span class="chip-name">Logic4</span>
+                        <span class="chip-status status-active">Afrondende fase</span>
+                    </div>
+                    <div class="glass ecom-chip accent-yellow reveal reveal-delay-2">
+                        <div class="accent-line yellow"></div>
+                        <img src="pptx-assets/logo-cloudsuite.png" alt="CloudSuite" class="chip-logo">
+                        <span class="chip-name">CloudSuite</span>
+                        <span class="chip-status status-soon">Binnenkort</span>
+                    </div>
+                    <div class="glass ecom-chip accent-yellow reveal reveal-delay-2">
+                        <div class="accent-line yellow"></div>
+                        <img src="pptx-assets/logo-shopware.png" alt="Shopware" class="chip-logo">
+                        <span class="chip-name">Shopware</span>
+                        <span class="chip-status status-planned">Gepland</span>
+                    </div>
+                    <div class="glass ecom-chip accent-yellow reveal reveal-delay-3">
+                        <div class="accent-line yellow"></div>
+                        <img src="pptx-assets/logo-magento.png" alt="Magento" class="chip-logo">
+                        <span class="chip-name">Magento</span>
+                        <span class="chip-status status-planned">Gepland</span>
+                    </div>
+                    <div class="glass ecom-chip reveal reveal-delay-3">
+                        <img src="pptx-assets/logo-lightspeed.png" alt="Lightspeed" class="chip-logo">
+                        <span class="chip-name">Lightspeed</span>
+                        <span class="chip-status status-possible">Mogelijk</span>
+                    </div>
+                </div>
+                <p class="pim-note reveal">Daarnaast koppelen we met elk PIM-systeem op aanvraag.</p>
+            </div>
+
+            <!-- Datapools -->
+            <div class="integration-section">
+                <h3 class="reveal" style="color: var(--teal);"><span class="icon">🗄️</span> Datapools</h3>
+                <div class="datapool-grid">
+                    <div class="glass datapool-card accent-teal reveal">
+                        <div class="accent-line teal"></div>
+                        <img src="pptx-assets/logo-2ba.png" alt="2BA" class="dp-logo">
+                        <h4>2BA</h4>
+                        <div class="dp-meta">Gepland · ETIM klanten</div>
+                    </div>
+                    <div class="glass datapool-card accent-teal reveal reveal-delay-1">
+                        <div class="accent-line teal"></div>
+                        <img src="pptx-assets/logo-ezbase.png" alt="EZbase" class="dp-logo">
+                        <h4>EZbase</h4>
+                        <div class="dp-meta">Gepland · ETIM klanten</div>
+                    </div>
+                    <div class="glass datapool-card accent-teal reveal reveal-delay-2">
+                        <div class="accent-line teal"></div>
+                        <img src="pptx-assets/logo-gs1.png" alt="GS1" class="dp-logo">
+                        <h4>GS1 Datapool</h4>
+                        <div class="dp-meta">Gepland · GPC klanten</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Standaarden -->
+            <div class="integration-section">
+                <h3 class="reveal" style="color: var(--violet-light);"><span class="icon">📐</span> Standaarden</h3>
+                <div class="standards-grid">
+                    <div class="glass standard-chip accent-teal reveal">
+                        <div class="accent-line green"></div>
+                        <h4>ETIM</h4>
+                        <div class="std-status status-active">Actief</div>
+                    </div>
+                    <div class="glass standard-chip accent-teal reveal reveal-delay-1">
+                        <div class="accent-line green"></div>
+                        <h4>Custom / Vrij</h4>
+                        <div class="std-status status-active">Actief</div>
+                    </div>
+                    <div class="glass standard-chip accent-yellow reveal reveal-delay-2">
+                        <div class="accent-line yellow"></div>
+                        <h4>GPC</h4>
+                        <div class="std-status status-planned">Nieuw in 2026</div>
+                    </div>
+                    <div class="glass standard-chip accent-coral reveal reveal-delay-3">
+                        <div class="accent-line coral"></div>
+                        <h4>HS-codes</h4>
+                        <div class="std-status status-planned">Nieuw in 2026</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Samenwerkingspartners -->
+            <div class="integration-section">
+                <h3 class="reveal" style="color: var(--coral);"><span class="icon">🤝</span> Samenwerkingspartners</h3>
+                <div class="partners-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem;">
+                    <div class="glass datapool-card accent-coral reveal">
+                        <div class="accent-line coral"></div>
+                        <img src="pptx-assets/ketenstandaard.png" alt="Ketenstandaard Bouw en Techniek" class="dp-logo" style="max-width: 70%;">
+                        <h4>Ketenstandaard Bouw en Techniek</h4>
+                        <div class="dp-meta status-active">Partner</div>
+                    </div>
+                    <div class="glass datapool-card accent-teal reveal reveal-delay-1">
+                        <div class="accent-line teal"></div>
+                        <img src="pptx-assets/logo-2ba.png" alt="2BA" class="dp-logo">
+                        <h4>2BA</h4>
+                        <div class="dp-meta status-active">Partner</div>
+                    </div>
+                    <div class="glass datapool-card accent-violet reveal reveal-delay-2">
+                        <div class="accent-line violet"></div>
+                        <img src="pptx-assets/logo-gs1.png" alt="GS1" class="dp-logo">
+                        <h4>GS1</h4>
+                        <div class="dp-meta status-active">Partner</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <div class="page-footer">
+            <p>Upshift Ontwikkelroadmap 2026</p>
+        </div>
+    </div>
+
+    <!-- Partner strip -->
+    <div class="partner-strip">
+        <span>Partner van</span>
+        <img src="pptx-assets/ketenstandaard.png" alt="Ketenstandaard Bouw en Techniek">
+        <div class="divider"></div>
+        <img src="pptx-assets/logo-2ba.png" alt="2BA">
+        <div class="divider"></div>
+        <img src="pptx-assets/logo-gs1.png" alt="GS1">
+    </div>
+
+    <script>
+        // Nav scroll effect
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 40);
+        });
+
+        // Reveal on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
